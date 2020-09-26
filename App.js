@@ -1,6 +1,13 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CourseList from './components/CourseList';
+
+const fetchSchedule = async () => {
+    const response = await fetch(url);
+    if (!response.ok) throw response;
+    const json = await response.json();
+    setSchedule(json);
+  };
 
 const schedule = {
   "title": "CS Courses for 2018-2019",
@@ -30,17 +37,31 @@ const schedule = {
 
 
 const Banner = ({title}) => (
-  <Text style={styles.banner}>{title}</Text>
+  <Text style={styles.bannerStyle}>{title || '[loading...]'}</Text>
 );
 
 const App = () => {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Banner title={schedule.title} />
-        <CourseList courses={schedule.courses} />
-      </SafeAreaView>
-    );
- };
+  const [schedule, setSchedule] = useState({ title: '', courses: [] });
+  
+  const url = 'https://courses.cs.northwestern.edu/394/data/cs-courses.php';
+
+  useEffect(() => {
+    const fetchSchedule =  async () => {
+      const response = await fetch(url);
+      if (!response.ok) throw response;
+      const json = await response.json();
+      setSchedule(json);
+    }
+    fetchSchedule();
+  }, []);
+  
+  return (
+    <SafeAreaView style={styles.container}>
+      <Banner title={schedule.title} />
+      <CourseList courses={schedule.courses} />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
