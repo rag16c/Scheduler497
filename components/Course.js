@@ -1,18 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { getCourseNumber, getCourseTerm, hasConflict, terms } from '../utils/course';
 
-const getCourseNumber = course => (
-  course.id.slice(1)
-)
-
-const Course = ({course}) => (
-  <TouchableOpacity style={styles.courseButton}>
+const Course = ({course, isDisabled, isSelected, select}) => (
+  <TouchableOpacity style={styles[isSelected ? 'courseButtonSelected' : isDisabled ? 'courseButtonDisabled' : 'courseButton']}
+      onPress={() => { if (!isDisabled) select(course); }}>
     <Text style={styles.courseText}>
       {`CS ${getCourseNumber(course)}\n${course.meets}`}
     </Text>
   </TouchableOpacity>
 );
-
+  
 const styles = StyleSheet.create({
   courseButton: {
     flex: 1,
