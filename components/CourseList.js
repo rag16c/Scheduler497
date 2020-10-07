@@ -1,30 +1,27 @@
+import React, {useState} from 'react';
+import {StyleSheet, ScrollView, View} from 'react-native';
 import Course from './Course';
-import React, {useState, useEffect } from 'react';
-import {ScrollView, View, StyleSheet } from 'react-native';
 import TermSelector from './TermSelector';
-import { getCourseNumber, getCourseTerm, hasConflict, terms } from '../utils/course';
 import CourseSelector from './CourseSelector';
 
-const CourseList = ({courses}) => {
-  const [selectedTerm, setSelectedTerm] = useState('Fall');
-  const termCourses = courses.filter(course => selectedTerm === getCourseTerm(course));
-  
-  return (
+const termMap = { F: "Fall", S: "Spring", W: "Winter"};
+const terms = Object.values(termMap);
+
+const getCourseTerm = course => (
+  termMap[course.id.charAt(0)]
+);
+
+
+const CourseList = ({courses,view}) => {
+    const [selectedTerm, setSelectedTerm] = useState("Fall");
+    
+    const termCourse = courses.filter(course => selectedTerm === getCourseTerm(course));
+    return (
     <ScrollView>
-      <TermSelector selectedTerm={selectedTerm} setSelectedTerm={setSelectedTerm} />
-      <CourseSelector courses={termCourses} />
+        <TermSelector selectedTerm={selectedTerm} setSelectedTerm={setSelectedTerm} />
+        <CourseSelector courses={termCourse} view={view}/>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  courseList: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-});
 
 export default CourseList;

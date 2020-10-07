@@ -1,18 +1,18 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { getCourseNumber, getCourseTerm, hasConflict, terms } from '../utils/course';
+import React, {useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {getCourseNumber} from '../utils/course.js'
 
-const Course = ({course, isDisabled, isSelected, select}) => (
-  <TouchableOpacity style={styles[isSelected ? 'courseButtonSelected' : isDisabled ? 'courseButtonDisabled' : 'courseButton']}
-      onPress={() => { if (!isDisabled) select(course); }}>
-    <Text style={styles.courseText}>
-      {`CS ${getCourseNumber(course)}\n${course.meets}`}
-    </Text>
-  </TouchableOpacity>
-);
-  
-const styles = StyleSheet.create({
-  courseButton: {
+const Course = ({course, isSelected, select, isDisabled,view}) => (
+    <TouchableOpacity style={styles[isSelected ? 'courseButtonSelected' : isDisabled ? 'courseButtonDisabled' : 'courseButton']}
+        onPress={() => { if (!isDisabled) select(course);}}
+        onLongPress={() => view(course)}>
+      <Text style={styles.courseText}>
+        {`CS ${getCourseNumber(course)}\n${course.meets}`}
+      </Text>
+    </TouchableOpacity>
+  );
+
+const courseButtonBase = {
     flex: 1,
     borderRadius: 5,
     justifyContent: 'center',
@@ -22,13 +22,26 @@ const styles = StyleSheet.create({
     padding: 10,
     minWidth: 90,
     maxWidth: 90,
-    backgroundColor: '#66b0ff',
-  },
-  courseText:{
-    color: '#fff',
-    fontSize: 12,
-    textAlign: 'center',
-  },
+};
+
+const styles = StyleSheet.create({
+    courseButton: {
+        ...courseButtonBase,
+        backgroundColor: '#66b0ff',
+    },
+    courseButtonSelected: {
+        ...courseButtonBase,
+        backgroundColor: '#004a99',
+    },
+    courseButtonDisabled: {
+        ...courseButtonBase,
+        backgroundColor: '#d3d3d3',
+    },
+    courseText: {
+        color: '#fff',
+        fontSize: 12,
+        textAlign: 'center',
+    },
 });
 
 export default Course;
